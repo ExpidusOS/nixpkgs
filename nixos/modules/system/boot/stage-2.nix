@@ -11,6 +11,7 @@ let
     shellDebug = "${pkgs.bashInteractive}/bin/bash";
     shell = "${pkgs.bash}/bin/bash";
     inherit (config.boot) systemdExecutable extraSystemdUnitPaths;
+    inherit (config.system.nixos) distroName;
     isExecutable = true;
     inherit (config.nix) readOnlyStore;
     inherit useHostResolvConf;
