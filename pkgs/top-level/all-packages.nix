@@ -13762,6 +13762,9 @@ with pkgs;
 
   fluidd = callPackage ../applications/misc/fluidd { };
 
+  flutter-engineVersions = callPackage ../development/libraries/flutter-engine {};
+  flutter-engine = flutter-engineVersions.stable;
+
   flutterPackages =
     recurseIntoAttrs (callPackage ../development/compilers/flutter { });
   flutter = flutterPackages.stable;
