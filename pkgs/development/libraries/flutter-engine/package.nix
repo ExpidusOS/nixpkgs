@@ -119,7 +119,7 @@ let
 
       cp ${./git_revision.py} $out/src/flutter/build/git_revision.py
 
-      rm -rf $out/.cipd
+      rm -rf $out/.cipd $out/.gclient $out/.gclient_entries $out/.gclient_previous_custom_vars $out/.gclient_previous_sync_commits
       runHook postInstall
     '';
 
