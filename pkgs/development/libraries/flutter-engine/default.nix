@@ -9,7 +9,7 @@ let
       pname = "flutter-engine";
       version = "3.7.10";
       engineUrl = "https://github.com/flutter/engine.git@ec975089acb540fc60752606a3d3ba809dd1528b";
-      sourceHash = "sha256-VSs+Ma+jpiJXUBA4ba5GBt2qCGLNo9StvHmcd9f8PRI=";
+      sourceHash = "sha256-sqx8vEyflQFn/PcACLDEpfG6ekJMwqMjfyMyQu1gtcI=";
       customDeps = {};
       customVars = {};
       configureFlags = [];

@@ -111,10 +111,9 @@ let
       find $out -name '*.pyc' -type f -delete
       find $out -name 'package_config.json' -type f -exec sed -i '/"generated": /d' {} \;
       find $out -name '.git' -type d -exec ${writeShellScript "${drvName}-fix-git" ''
-        head=$(cat $1/logs/HEAD | awk 'NF=2')
-        rm -rf $1
-        mkdir -p $1/logs
-        echo $head >$1/logs/HEAD
+        source ${../../../build-support/fetchgit/deterministic-git}
+        export PATH=$PATH:${git}/bin
+        make_deterministic_repo $1
       ''} {} \;
 
       cp ${./git_revision.py} $out/src/flutter/build/git_revision.py
