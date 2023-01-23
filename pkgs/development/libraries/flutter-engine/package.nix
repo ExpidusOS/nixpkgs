@@ -185,6 +185,6 @@ EOF
     homepage = "https://flutter.dev";
     license = licenses.bsd3;
     platforms = [ "aarch64-linux" "x86_64-linux" ];
-    maintainers = with maintainers; [ TheComputerGuy ];
+    maintainers = with maintainers; [ RossComputerGuy ];
   };
 }
