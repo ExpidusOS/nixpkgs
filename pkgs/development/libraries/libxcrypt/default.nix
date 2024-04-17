@@ -22,7 +22,7 @@ stdenv.mkDerivation (finalAttrs: {
 
   configureFlags = [
     "--enable-hashes=${enableHashes}"
-    "--enable-obsolete-api=glibc"
+    "--enable-obsolete-api=yes"
     "--disable-failure-tokens"
     # required for musl, android, march=native
     "--disable-werror"
