@@ -99,8 +99,8 @@ def get_engine_hashes(engine_version):
     result_dict = {}
 
     for match in matches:
-        _, system, got = match
-        result_dict[system] = got
+        flutter_platform, architecture, got = match
+        result_dict.setdefault(flutter_platform, {})[architecture] = got
 
     def sort_dict_recursive(d):
         return {

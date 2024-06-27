@@ -4,7 +4,7 @@
   fetchurl,
   writeText,
   runCommand,
-  hostPlatform,
+  buildPlatform,
   darwin,
   writeShellScriptBin,
   depot_toolsCommit ? "7d95eb2eb054447592585c73a8ff7adad97ecba1",
@@ -29,7 +29,7 @@
   },
 }:
 let
-  constants = callPackage ./constants.nix { targetPlatform = hostPlatform; };
+  constants = callPackage ./constants.nix { platform = buildPlatform; };
 in
 {
   depot_tools = fetchgit {

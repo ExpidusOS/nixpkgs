@@ -4,11 +4,11 @@
   writeText,
   symlinkJoin,
   targetPlatform,
-  hostPlatform,
+  buildPlatform,
   darwin,
   clang,
   llvm,
-  tools ? callPackage ./tools.nix { inherit hostPlatform; },
+  tools ? callPackage ./tools.nix { inherit buildPlatform; },
   stdenv,
   stdenvNoCC,
   dart,
@@ -53,7 +53,7 @@ let
 
   expandDeps = deps: flatten (map expandSingleDep deps);
 
-  constants = callPackage ./constants.nix { inherit targetPlatform; };
+  constants = callPackage ./constants.nix { platform = targetPlatform; };
 
   src = callPackage ./source.nix {
     inherit
@@ -61,6 +61,8 @@ let
       version
       hashes
       url
+      targetPlatform
+      buildPlatform
       ;
   };
 
@@ -324,5 +326,7 @@ stdenv.mkDerivation (finalAttrs: {
       "x86_64-darwin"
       "aarch64-darwin"
     ];
+  } // lib.optionalAttrs (lib.versionOlder flutterVersion "3.22") {
+    hydraPlatforms = [];
   };
 })

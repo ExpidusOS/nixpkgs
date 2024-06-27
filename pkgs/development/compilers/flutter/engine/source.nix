@@ -1,9 +1,9 @@
 {
   callPackage,
-  hostPlatform,
+  buildPlatform,
   targetPlatform,
   fetchgit,
-  tools ? callPackage ./tools.nix { inherit hostPlatform; },
+  tools ? callPackage ./tools.nix { inherit buildPlatform; },
   curl,
   pkg-config,
   git,
@@ -16,10 +16,12 @@
   url,
 }:
 let
-  constants = callPackage ./constants.nix { inherit targetPlatform; };
+  target-constants = callPackage ./constants.nix { platform = targetPlatform; };
+  build-constants = callPackage ./constants.nix { platform = buildPlatform; };
+
   boolOption = value: if value then "True" else "False";
 in
-runCommand "flutter-engine-source-${version}-${targetPlatform.system}"
+runCommand "flutter-engine-source-${version}-${buildPlatform.system}-${targetPlatform.system}"
   {
     pname = "flutter-engine-source";
     inherit version;
@@ -51,8 +53,20 @@ runCommand "flutter-engine-source-${version}-${targetPlatform.system}"
           "setup_githooks": False,
           "download_esbuild": False,
           "download_dart_sdk": False,
+          "host_cpu": "${build-constants.alt-arch}",
+          "host_os": "${build-constants.alt-os}",
         },
       }]
+
+      target_os_only = True
+      target_os = [
+        "${target-constants.alt-os}"
+      ]
+
+      target_cpu_only = True
+      target_cpu = [
+        "${target-constants.alt-arch}"
+      ]
     '';
 
     NIX_SSL_CERT_FILE = "${cacert}/etc/ssl/certs/ca-bundle.crt";
@@ -64,7 +78,7 @@ runCommand "flutter-engine-source-${version}-${targetPlatform.system}"
 
     outputHashAlgo = "sha256";
     outputHashMode = "recursive";
-    outputHash = hashes.${targetPlatform.system} or (throw "Hash not set for ${targetPlatform.system}");
+    outputHash = hashes."${buildPlatform.system}-${targetPlatform.system}" or (throw "Hash not set for ${targetPlatform.system} on ${buildPlatform.system}");
   }
   ''
     source ${../../../../build-support/fetchgit/deterministic-git}
@@ -76,7 +90,7 @@ runCommand "flutter-engine-source-${version}-${targetPlatform.system}"
     cd $out
 
     export PATH=$PATH:$depot_tools
-    python3 $depot_tools/gclient.py sync --no-history --shallow --nohooks 2>&1 >/dev/null
+    python3 $depot_tools/gclient.py sync --no-history --shallow --nohooks -j $NIX_BUILD_CORES
     find $out -name '.git' -exec dirname {} \; | xargs bash -c 'make_deterministic_repo $@' _
     find $out -path '*/.git/*' ! -name 'HEAD' -prune -exec rm -rf {} \;
     find $out -name '.git' -exec mkdir {}/logs \;
