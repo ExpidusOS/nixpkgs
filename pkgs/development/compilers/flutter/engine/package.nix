@@ -82,7 +82,7 @@ let
     ];
   };
 
-  outName = "host_${runtimeMode}${lib.optionalString (!isOptimized) "_unopt --unoptimized"}";
+  outName = "host_${runtimeMode}${lib.optionalString (!isOptimized) "_unopt"}";
 
   dartPath = "${if (lib.versionAtLeast flutterVersion "3.23") then "flutter/third_party" else "third_party"}/dart";
 in
@@ -240,7 +240,7 @@ stdenv.mkDerivation (finalAttrs: {
     ++ optionals (targetPlatform.isx86_64 == false) [
       "--linux"
       "--linux-cpu ${constants.alt-arch}"
-    ];
+    ] ++ lib.optional (!isOptimized) "--unoptimized";
 
   # NOTE: Once https://github.com/flutter/flutter/issues/127606 is fixed, use "--no-prebuilt-dart-sdk"
   configurePhase =
